@@ -1,16 +1,18 @@
+#include <stdint.h>
 #include "gpio.h"
 #include "gpiote.h"
 #include "ppi.h"
 
-int main(void)
-{
-    gpiote_init();   // setter opp GPIOTE‑kanaler
-    ppi_init();      // kobler knapp‑event → LED‑tasks via PPI
+extern void gpiote_init(void);
+extern void ppi_init(void);
 
-    // Alt skjer via hardware: knappetrykk toggler LED
+int main(void) {
+    gpiote_init();  // Konfigurer GPIOTE
+    ppi_init();     // Sett opp PPI
+
     while (1) {
-        __WFE();      // sleep til event
-        __SEV();      // for sikkerhets skyld, clear WFE‑flagget
-        __WFE();
+        __WFI();    // CPU i dvale, venter på event
     }
+
+    return 0;
 }
