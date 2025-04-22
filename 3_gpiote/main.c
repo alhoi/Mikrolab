@@ -2,14 +2,15 @@
 #include "gpiote.h"
 #include "ppi.h"
 
-int main(){
-    // Configure LED Matrix
-	for(int i = 17; i <= 20; i++){
-		GPIO->DIRSET = (0 << i);
-		GPIO->OUTCLR = (0 << i);
-	}
+int main(void)
+{
+    gpiote_init();   // setter opp GPIOTE‑kanaler
+    ppi_init();      // kobler knapp‑event → LED‑tasks via PPI
 
-    
-
-
+    // Alt skjer via hardware: knappetrykk toggler LED
+    while (1) {
+        __WFE();      // sleep til event
+        __SEV();      // for sikkerhets skyld, clear WFE‑flagget
+        __WFE();
+    }
 }
