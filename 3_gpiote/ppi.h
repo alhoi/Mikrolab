@@ -5,19 +5,30 @@
 #define PPI ((NRF_PPI_REG*)0x4001F000)
 
 typedef struct {
-	uint32_t EEP; // Event Endpoint
-	uint32_t TEP; // Task Endpoint
+	uint32_t EN;
+	uint32_t DIS;
+} PPI_TASKS_TYPE;
+
+typedef struct {
+	uint32_t EEP;
+	uint32_t TEP;
 } PPI_CHANNEL_TYPE;
 
 typedef struct {
-	volatile uint32_t RESERVED0[1284]; // 0x000 to 0x510
-	volatile uint32_t CHEN;       // 0x500
-	volatile uint32_t CHENSET;    // 0x504
-	volatile uint32_t CHENCLR;    // 0x508
+	// Tasks
+	volatile PPI_TASKS_TYPE PPI_TASKS[6];
+	// Registers
+	volatile uint32_t RESERVED0[308];
+	volatile uint32_t CHEN;
+	volatile uint32_t CHENSET;
+	volatile uint32_t CHENCLR;
 	volatile uint32_t RESERVED1;
-	volatile PPI_CHANNEL_TYPE PPI_CH[16]; // 0x510–0x58F
-	volatile uint32_t RESERVED2[156];
-	volatile uint32_t CHG[4]; // 0x800–0x80C
+	volatile PPI_CHANNEL_TYPE PPI_CH[20];
+	volatile uint32_t RESERVED2[148];
+	volatile uint32_t CHG[6];
+	volatile uint32_t RESERVED3[62];
+	volatile uint32_t FORK_TEP[32];
 } NRF_PPI_REG;
 
+void ppi_init(void);
 #endif

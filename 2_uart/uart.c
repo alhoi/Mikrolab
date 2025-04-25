@@ -70,17 +70,29 @@ void uart_send(char letter)
 
 char uart_read()
 {
-    char letter;
+
+    if (!UART->EVENTS_RXDRDY)
+        return '\0';
     UART->EVENTS_RXDRDY = 0;
-    UART->TASKS_STARTRX = 1;
-    if (UART->EVENTS_RXDRDY)
+
+    return (char)UART->RXD;
+}
+
+void toggle_leds()
+{
+    int sleep = 0;
+    int isOn = GPIO->OUT == (0 << 17 | 0 << 18 | 0 << 19 | 0 << 20);
+    /* Check if button 1 is pressed;
+     * turn on LED matrix if it is. */
+    if (isOn)
     {
-        letter = UART->RXD;
+        GPIO->OUT = 1 << 17 | 1 << 18 | 1 << 19 | 1 << 20;
     }
     else
     {
-        letter = '\0';
+        GPIO->OUT = 0 << 17 | 0 << 18 | 0 << 19 | 0 << 20;
     }
-    return letter;
+    sleep = 10000;
+    while (--sleep)
+        ; // Delay
 }
-

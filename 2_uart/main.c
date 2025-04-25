@@ -19,6 +19,7 @@ ssize_t _write(int fd, const void *buf, size_t count)
 		uart_send(*letter);
 		letter++;
 	}
+	
 	return count;
 }
 
@@ -56,15 +57,16 @@ int main()
 
 		// Check if something is read
 		char letter = uart_read();
+
 		if (letter != '\0')
 		{
-			GPIO->OUT = 1 << 17 | 1 << 18 | 1 << 19 | 1 << 20;
+			toggle_leds();
 		}
 
-		int val_btn3 = GPIO->IN & (1 << 15);
+		int val_btn3 = GPIO->IN & (1 << 12);
 		if (!val_btn3)
 		{
-			iprintf("The average grade in TTK%d was in %d was: %c\n\r", 4235, 2022, 'B');
+			//iprintf("The average grade in TTK%d was in %d was: %c\n\r", 4235, 2022, 'B');
 		}
 
 		sleep = 10000;

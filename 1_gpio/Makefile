@@ -40,7 +40,7 @@ default: $(BUILD_DIR)
 	$(QUIET)$(OBJCOPY) -O ihex $(BUILD_DIR)/main.elf $(BUILD_DIR)/main.hex
 
 flash:
-	nrfjprog -f $(FAMILY) --sectorerase --program $(BUILD_DIR)/main.hex --verify --reset
+	nrfjprog -f $(FAMILY) --sectorerase --program $(BUILD_DIR)/main.hex --verify --reset --log
 	
 debug: $(BUILD_DIR)
 	@echo Compiling project with debug
@@ -49,7 +49,7 @@ debug: $(BUILD_DIR)
 	$(OBJCOPY) -O ihex $(BUILD_DIR)/main.elf $(BUILD_DIR)/main.hex
 
 erase: $(BUILD_DIR)
-	nrfjprog -f $(FAMILY) --eraseall
+	nrfjprog -f $(FAMILY) --eraseall --log
 
 clean: $(BUILD_DIR)
 	$(QUIET) rm $(BUILD_DIR)/main.elf

@@ -1,30 +1,19 @@
 #include "gpiote.h"
 #include "gpio.h"
 
-// Tilpass disse pinnene etter hva som er koblet på devkit
 #define BUTTON1_PIN 13
-const uint8_t led_pins[4] = {17, 18, 19, 20}; // Eksempel: LED supply pins
+const uint8_t led_pins2[4] = {17, 18, 19, 20};
 
 void gpiote_init(void) {
-    // Konfigurer GPIOTE kanal 0 til å generere en hendelse på knappetrykk (event)
-    GPIOTE->CONFIG[0] =
-        (1 << 0) |                                
-        (BUTTON1_PIN << 8) |                     
-        (2 << 16) |                               
-        (0 << 20);                                
+    // Konfigurer BUTTON1 som EVENT (GPIOTE kanal 0)
+    GPIOTE->CONFIG[0] = 1 | (BUTTON1_PIN << 8) | (2 << 16) | (0 << 20);                 // POLARITY = HiToLo
 
-    // Konfigurer kanal 1–4 til å toggle LED-pinnene (task)
+    // Konfigurer fire LED-kanaler (GPIOTE kanal 1–4) som TASK
     for (int i = 0; i < 4; i++) {
         GPIOTE->CONFIG[i + 1] =
-            (3 << 0) |                            
-            (led_pins[i] << 8) |                  
-            (3 << 16) |                           
-            (0 << 20);                            
-
-        // Sett pinnene som output i GPIO
-        GPIO->PIN_CNF[led_pins[i]] = 1; // DIR=Output
+            3|                 // MODE = Task
+            (led_pins2[i] << 8) |       
+            (3 << 16) |                
+            (0 << 20);                 
     }
-
-    // Sett knapp som input med pull-up
-    GPIO->PIN_CNF[BUTTON1_PIN] = (1 << 1) | (3 << 2); // DIR=Input, Pull=Pull-up
-}
+} 
